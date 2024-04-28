@@ -1,25 +1,41 @@
-import logo from './logo.svg';
+
+import React from 'react';
 import './App.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import LandingPage from './Pages/Landing_page';
+import {Amplify} from 'aws-amplify';
+
+import { Authenticator, withAuthenticator } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
+import awsExports from './aws-exports';
+
+Amplify.configure(awsExports);
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Authenticator>
+        {({ signOut }) => (
+             <Router>
+              <button 
+                onClick={signOut} 
+                style={{ 
+                  margin: '20px', 
+                  fontSize: '0.8rem', 
+                  padding: '5px 10px', 
+                  marginTop: '20px'
+                }}
+              >
+                Sign Out
+              </button>
+              <Routes>
+              <Route path="/" element={<LandingPage />} />
+              </Routes>
+            </Router>
+        )}
+      </Authenticator>
     </div>
   );
 }
 
-export default App;
+export default withAuthenticator(App);
